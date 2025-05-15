@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tracklock Mode - Quest</title>
+  <style>
+    /* Corps principal */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding-top: 50px;
+    }
+
+    /* Logo */
+    .logo {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    /* Zone de recherche */
+    .search-container {
+      position: relative;
+      width: 80%;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+
+    #search-bar {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #111;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease-in-out;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    #search-bar::placeholder {
+      color: #444;
+    }
+
+    #search-bar:focus {
+      border-image: linear-gradient(45deg, #ff7eb3, #ff758c, #ff527b) 1;
+      border-width: 2px;
+    }
+
+    /* Résultats */
+    #results-container {
+      width: 80%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Carte pour chaque résultat */
+    .result-card {
+      background: linear-gradient(135deg, #1a1a1a, #222);
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      color: #fff;
+    }
+
+    .result-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .result-card a {
+      color: #ff758c;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .result-card a:hover {
+      text-decoration: underline;
+    }
+
+    .result-card p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo -->
+  <img src="logo.png" alt="Quest Logo" class="logo">
+
+  <!-- Barre de recherche -->
+  <div class="search-container">
+    <input type="text" id="search-bar" placeholder="Recherchez ici..." />
+  </div>
+
+  <!-- Conteneur de résultats -->
+  <div id="results-container"></div>
+
+  <script>
+    // Exemple de dictionnaire
+    const data = [
+      { title: "Google", url: "https://www.google.com", description: "Moteur de recherche populaire." },
+      { title: "Qwant", url: "https://www.qwant.com", description: "Moteur de recherche respectueux de la vie privée." },
+      { title: "GitHub", url: "https://github.com", description: "Plateforme de développement collaboratif." },
+      { title: "Quest", url: "https://github.com/arthur-lenoble/quest", description: "Votre dépôt sur GitHub pour les explorateurs." },
+      { title: "MDN Web Docs", url: "https://developer.mozilla.org", description: "Ressources pour les développeurs web." }
+    ];
+
+    // Élément de la barre de recherche et conteneur de résultats
+    const searchBar = document.getElementById("search-bar");
+    const resultsContainer = document.getElementById("results-container");
+
+    // Fonction de recherche
+    searchBar.addEventListener("input", () => {
+      const query = searchBar.value.trim().toLowerCase();
+      resultsContainer.innerHTML = ""; // Réinitialiser les résultats
+
+      if (query) {
+        const results = data.filter(item =>
+          item.title.toLowerCase().includes(query) || item.description.toLowerCase().includes(query)
+        );
+
+        if (results.length > 0) {
+          results.forEach(result => {
+            const card = document.createElement("div");
+            card.className = "result-card";
+            card.innerHTML = `
+              <a href="${result.url}" target="_blank">${result.title}</a>
+              <p>${result.description}</p>
+            `;
+            resultsContainer.appendChild(card);
+          });
+        } else {
+          resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
