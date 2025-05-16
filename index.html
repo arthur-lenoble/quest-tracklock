@@ -1,154 +1,446 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tracklock Mode - Quest</title>
+  <meta name="theme-color" content="#111">
   <style>
-    /* Corps principal */
-    body {
+    :root {
+      --main-bg: #111;
+      --card-bg: linear-gradient(135deg, #1a1a1a 60%, #23262f 100%);
+      --text-main: #fff;
+      --text-muted: #aaa;
+      --accent1: #ff7eb3;
+      --accent2: #57c6e1;
+      --accent3: #f7b267;
+      --accent4: #5efc8d;
+      --radius: 14px;
+      --shadow: 0 8px 22px 0 rgba(0,0,0,0.44);
+    }
+
+    html, body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--main-bg);
+      color: var(--text-main);
+      font-family: 'Inter', Arial, sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      padding-top: 50px;
+      padding: 0;
     }
 
-    /* Logo */
+    .header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 32px;
+      margin-bottom: 24px;
+    }
+
     .logo {
-      width: 150px;
-      margin-bottom: 20px;
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 12px;
+      box-shadow: 0 6px 22px 0 rgba(0,0,0,0.18);
+      user-select: none;
     }
 
-    /* Zone de recherche */
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4));
+      background-size: 200% 200%;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: gradient-move 6s ease-in-out infinite;
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+
+    @keyframes gradient-move {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .subtitle {
+      font-size: 1.07rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    /* Barre de recherche */
     .search-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 0 6vw;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      margin: 20px 0 22px 0;
+    }
+
+    .search-box {
       position: relative;
-      width: 80%;
-      margin-bottom: 20px;
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
     }
 
     #search-bar {
       width: 100%;
       padding: 15px 20px;
-      font-size: 16px;
+      font-size: 1.03rem;
       color: #fff;
-      background-color: #111;
-      border: 2px solid transparent;
-      border-radius: 8px;
+      background: #181818;
+      border: 2.5px solid transparent;
+      border-radius: var(--radius);
       outline: none;
-      transition: border-color 0.3s ease-in-out;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      transition: box-shadow 0.25s, border-color 0.3s;
+      box-shadow: var(--shadow);
+      z-index: 2;
+      position: relative;
     }
 
     #search-bar::placeholder {
       color: #444;
+      letter-spacing: 0.02em;
     }
 
-    #search-bar:focus {
-      border-image: linear-gradient(45deg, #ff7eb3, #ff758c, #ff527b) 1;
-      border-width: 2px;
-      border-radius: 8px;
+    /* Halo animé */
+    .search-box.active #search-bar {
+      border-color: transparent;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.02),
+        0 0 20px 3px #ff7eb380, 
+        0 0 30px 8px #57c6e170,
+        0 0 70px 20px #f7b26750;
+      animation: halo 1.7s linear infinite;
     }
 
-    /* Résultats */
+    @keyframes halo {
+      0% {
+        box-shadow:
+          0 0 0 4px rgba(255, 255, 255, 0.02),
+          0 0 20px 3px #ff7eb380, 
+          0 0 30px 8px #57c6e170,
+          0 0 70px 20px #f7b26750;
+      }
+      33% {
+        box-shadow:
+          0 0 0 4px rgba(255, 255, 255, 0.02),
+          0 0 20px 3px #5efc8d90, 
+          0 0 35px 8px #ff7eb380,
+          0 0 65px 18px #57c6e170;
+      }
+      66% {
+        box-shadow:
+          0 0 0 4px rgba(255, 255, 255, 0.02),
+          0 0 20px 3px #f7b26780, 
+          0 0 30px 8px #5efc8d90,
+          0 0 70px 20px #ff7eb380;
+      }
+      100% {
+        box-shadow:
+          0 0 0 4px rgba(255, 255, 255, 0.02),
+          0 0 20px 3px #ff7eb380, 
+          0 0 30px 8px #57c6e170,
+          0 0 70px 20px #f7b26750;
+      }
+    }
+
+    .search-btn {
+      margin-left: 10px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4));
+      background-size: 200% 200%;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      outline: none;
+      border-radius: var(--radius);
+      padding: 0 22px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16);
+      transition: background 0.25s, box-shadow 0.22s;
+      animation: gradient-move 8s ease-in-out infinite;
+      z-index: 3;
+      height: 50px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-btn:active {
+      box-shadow: 0 0 0 3px #fff2;
+      background-position: 100% 0;
+    }
+
+    /* Conteneur résultats */
     #results-container {
-      width: 80%;
-      max-width: 800px;
+      width: 100%;
+      max-width: 680px;
+      padding: 0 6vw;
+      margin-top: 10px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      align-items: center;
+      gap: 24px;
+      min-height: 80px;
+      margin-bottom: 40px;
     }
 
-    /* Carte pour chaque résultat */
+    /* Carte résultat */
     .result-card {
-      background: linear-gradient(135deg, #1a1a1a, #222);
-      border-radius: 10px;
-      padding: 15px 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: transform 0.2s, box-shadow 0.2s;
-      color: #fff;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: 0 6px 36px 0 rgba(0,0,0,0.55), 0 2px 12px 0 rgba(52,52,52,0.09);
+      padding: 22px 22px 16px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 2px solid transparent;
+      transition: box-shadow 0.2s, border 0.22s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
     }
 
     .result-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 12px 40px 0 rgba(31,211,255,0.20), 0 4px 20px 0 rgba(52,52,52,0.14);
+      border: 2px solid var(--accent2);
+      transform: translateY(-4px) scale(1.018);
+      z-index: 2;
     }
 
-    .result-card a {
-      color: #ff758c;
+    .result-link {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--accent1);
+      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4));
+      background-size: 160% 160%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
       text-decoration: none;
-      font-size: 18px;
-      font-weight: bold;
+      margin-bottom: 8px;
+      transition: color 0.2s;
+      word-break: break-all;
     }
 
-    .result-card a:hover {
+    .result-link:hover {
+      filter: brightness(1.25);
       text-decoration: underline;
     }
 
-    .result-card p {
-      margin: 8px 0 0;
-      font-size: 14px;
-      color: #aaa;
+    .result-desc {
+      font-size: 1.04rem;
+      color: var(--text-muted);
+      margin: 6px 0 0 0;
+      line-height: 1.5;
+      word-break: break-word;
+      letter-spacing: 0.01em;
+      font-weight: 400;
+    }
+
+    @media (max-width: 700px) {
+      .header {margin-top: 20px;}
+      .title {font-size: 1.55rem;}
+      .logo {width: 70px; height: 70px;}
+      .search-container,
+      #results-container {
+        max-width: 100vw;
+        padding: 0 2vw;
+      }
+      .result-card {padding: 18px 10px 14px 14px;}
+      .result-link {font-size: 1.08rem;}
+      .result-desc {font-size: 0.97rem;}
+    }
+
+    @media (max-width: 430px) {
+      .title {font-size: 1.01rem;}
+      .logo {width: 48px; height: 48px;}
+      .header {margin-bottom: 14px;}
+      .search-btn {font-size: 0.99rem; padding: 0 11px; height: 41px;}
+      #search-bar {padding: 10px 10px;}
+      #results-container {gap: 15px;}
+      .result-card {padding: 13px 6px 8px 8px;}
     }
   </style>
 </head>
 <body>
-  <!-- Logo -->
-  <img src="trracklock-mode.png" alt="Quest Logo" class="logo">
-
-  <!-- Barre de recherche -->
-  <div class="search-container">
-    <input type="text" id="search-bar" placeholder="Recherchez ici..." />
+  <div class="header">
+    <img id="logo" src="logo.png" alt="Quest Logo" class="logo" onerror="this.style.display='none';document.getElementById('fallback-logo').style.display='block';">
+    <div id="fallback-logo" style="display:none;font-weight:600;font-size:2.2rem;color:#ff7eb3;padding:20px 0 8px 0;letter-spacing:0.03em;">
+      Quest
+    </div>
+    <div class="title">Tracklock mode</div>
+    <div class="subtitle">Moteur de recherche local élégant et rapide, 100% homemade.</div>
   </div>
-
-  <!-- Conteneur de résultats -->
+  <form class="search-container" id="search-form" autocomplete="off">
+    <div class="search-box" id="search-box">
+      <input type="text" id="search-bar" placeholder="Recherchez un site, un outil, une ressource..." autocomplete="off" />
+    </div>
+    <button type="submit" class="search-btn">Rechercher</button>
+  </form>
   <div id="results-container"></div>
 
   <script>
-    // Exemple de dictionnaire
+    // Dictionnaire exhaustif d'exemples (personnalisez à volonté !)
     const data = [
-      { title: "Google", url: "https://www.google.com", description: "Moteur de recherche populaire." },
-      { title: "Qwant", url: "https://www.qwant.com", description: "Moteur de recherche respectueux de la vie privée." },
-      { title: "GitHub", url: "https://github.com", description: "Plateforme de développement collaboratif." },
-      { title: "Quest", url: "https://github.com/arthur-lenoble/quest", description: "Le moteur de recherche qui vous protège jusqu'au bout." },
-      { title: "MDN Web Docs", url: "https://developer.mozilla.org", description: "Ressources pour les développeurs web." },
-      { title: "Opal AI", url: "https://arthur-lenoble.github.io/opal", description: "Le chatbot le plus rapide du monde..." }
+      {
+        title: "Google",
+        url: "https://www.google.com",
+        description: "Le moteur de recherche le plus utilisé au monde, permettant de trouver des informations, des images, des actualités, et bien plus, avec une rapidité inégalée et une interface simple."
+      },
+      {
+        title: "Qwant",
+        url: "https://www.qwant.com",
+        description: "Moteur de recherche européen respectueux de la vie privée, qui ne trace pas ses utilisateurs et propose une interface moderne avec résultats enrichis, actualités, réseaux sociaux et musique."
+      },
+      {
+        title: "GitHub",
+        url: "https://github.com",
+        description: "Plateforme collaborative incontournable pour héberger, versionner, partager, et contribuer à des projets de développement logiciel open source ou privés, avec gestion avancée des issues et pull requests."
+      },
+      {
+        title: "Quest",
+        url: "https://github.com/arthur-lenoble/quest",
+        description: "Projet open source réunissant des outils de recherche et d'exploration, facilitant la navigation dans de larges bases de code ou de documentation, pensé pour la performance et l'ergonomie."
+      },
+      {
+        title: "Tracklock Mode",
+        url: "https://github.com/arthur-lenoble/quest-tracklock",
+        description: "Version spéciale de Quest axée sur la confidentialité et la recherche locale, avec moteur 100% JavaScript, interface sombre et animations modernes pour une expérience unique."
+      },
+      {
+        title: "MDN Web Docs",
+        url: "https://developer.mozilla.org",
+        description: "Documentation de référence pour HTML, CSS, JavaScript et les APIs web : tutoriels, guides, et exemples pour tous les niveaux, édités par la communauté et Mozilla."
+      },
+      {
+        title: "Stack Overflow",
+        url: "https://stackoverflow.com",
+        description: "La plus grande plateforme de questions/réponses dédiée aux développeurs, couvrant tous les langages, frameworks et problématiques techniques avec votes, badges et modération communautaire."
+      },
+      {
+        title: "Wikipedia",
+        url: "https://fr.wikipedia.org",
+        description: "L'encyclopédie collaborative et multilingue en ligne, offrant un accès libre à des millions d’articles rédigés et maintenus par des bénévoles du monde entier."
+      },
+      {
+        title: "OpenAI",
+        url: "https://openai.com",
+        description: "Organisation pionnière en intelligence artificielle, créatrice de modèles comme GPT et DALL·E, proposant des API pour intégrer l’IA dans des applications et des outils innovants."
+      },
+      {
+        title: "Figma",
+        url: "https://figma.com",
+        description: "Outil collaboratif de design d’interface (UI/UX), permettant de prototyper, commenter et co-créer en temps réel sur le web, utilisé par les designers et développeurs du monde entier."
+      },
+      {
+        title: "Canva",
+        url: "https://www.canva.com",
+        description: "Plateforme intuitive pour créer des visuels, présentations, logos et contenus graphiques, avec de nombreux modèles gratuits, outils de collaboration et export multi-formats."
+      },
+      {
+        title: "Notion",
+        url: "https://www.notion.so",
+        description: "Espace de travail tout-en-un pour la prise de notes, la gestion de projets, bases de données, calendriers et wikis : personnalisable et connecté, aussi bien pour les équipes que les particuliers."
+      },
+      {
+        title: "Framasoft",
+        url: "https://framasoft.org",
+        description: "Association française dédiée à la promotion du logiciel libre, offrant de nombreux services alternatifs respectueux de la vie privée (Framadate, Framapad, Framagenda…)."
+      },
+      {
+        title: "Coursera",
+        url: "https://www.coursera.org",
+        description: "Plateforme d’apprentissage en ligne proposant des cours, spécialisations et certifications de grandes universités et entreprises, dans tous les domaines scientifiques et professionnels."
+      },
+      {
+        title: "Hacker News",
+        url: "https://news.ycombinator.com",
+        description: "Communauté de partage d’articles et de discussions sur la technologie, les startups, la programmation, la science et l’entrepreneuriat, animée par Y Combinator."
+      }
     ];
 
-    // Élément de la barre de recherche et conteneur de résultats
     const searchBar = document.getElementById("search-bar");
+    const searchForm = document.getElementById("search-form");
     const resultsContainer = document.getElementById("results-container");
+    const searchBox = document.getElementById("search-box");
 
-    // Fonction de recherche
-    searchBar.addEventListener("input", () => {
-      const query = searchBar.value.trim().toLowerCase();
-      resultsContainer.innerHTML = ""; // Réinitialiser les résultats
-
-      if (query) {
-        const results = data.filter(item =>
-          item.title.toLowerCase().includes(query) || item.description.toLowerCase().includes(query)
-        );
-
-        if (results.length > 0) {
-          results.forEach(result => {
-            const card = document.createElement("div");
-            card.className = "result-card";
-            card.innerHTML = `
-              <a href="${result.url}" target="_blank">${result.title}</a>
-              <p>${result.description}</p>
-            `;
-            resultsContainer.appendChild(card);
-          });
-        } else {
-          resultsContainer.innerHTML = "<p>Aucun résultat trouvé.</p>";
-        }
+    // Animation halo selon texte
+    function updateHalo() {
+      if (searchBar.value.trim() === "") {
+        searchBox.classList.remove("active");
+      } else {
+        searchBox.classList.add("active");
       }
+    }
+    searchBar.addEventListener("input", updateHalo);
+
+    // Recherche (sur clic bouton ou Entrée)
+    function doSearch(e) {
+      if (e) e.preventDefault();
+      updateHalo();
+      const query = searchBar.value.trim().toLowerCase();
+      resultsContainer.innerHTML = ""; // reset
+
+      if (query.length === 0) {
+        searchBox.classList.remove("active");
+        return;
+      }
+
+      const results = data.filter(item =>
+        item.title.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query)
+      );
+
+      if (results.length > 0) {
+        results.forEach(result => {
+          const card = document.createElement("div");
+          card.className = "result-card";
+          card.innerHTML = `
+            <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${result.title}</a>
+            <div class="result-desc">${result.description}</div>
+          `;
+          resultsContainer.appendChild(card);
+        });
+      } else {
+        const nothing = document.createElement("div");
+        nothing.className = "result-card";
+        nothing.innerHTML = `<div class="result-desc">Aucun résultat trouvé. Essayez un autre mot-clé ou explorez le catalogue !</div>`;
+        resultsContainer.appendChild(nothing);
+      }
+    }
+
+    searchForm.addEventListener("submit", doSearch);
+    // Optionnel : Entrée dans le champ lance la recherche (grâce au formulaire)
+
+    // Sur mobile, focus sur la barre de recherche au chargement
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        if (window.innerWidth < 600) {
+          searchBar.focus();
+        }
+      }, 250);
     });
   </script>
 </body>
