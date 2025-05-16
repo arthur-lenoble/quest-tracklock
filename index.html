@@ -4,303 +4,322 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tracklock Mode - Quest</title>
-  <meta name="theme-color" content="#111">
+  <meta name="theme-color" content="#101214">
   <style>
     :root {
-      --main-bg: #111;
-      --card-bg: linear-gradient(135deg, #1a1a1a 60%, #23262f 100%);
-      --text-main: #fff;
-      --text-muted: #aaa;
-      --accent1: #ff7eb3;
-      --accent2: #57c6e1;
-      --accent3: #f7b267;
-      --accent4: #5efc8d;
-      --radius: 14px;
-      --shadow: 0 8px 22px 0 rgba(0,0,0,0.44);
+      --main-bg: #101214;
+      --glass: rgba(17,18,21,0.83);
+      --glass-blur: blur(8px);
+      --card-bg: rgba(22,24,28,0.95);
+      --border-glass: rgba(255,255,255,0.07);
+      --text-main: #eaeaea;
+      --text-muted: #b1b1b1;
+      --accent: #4ecdc4;
+      --halo1: #2e9da7;
+      --halo2: #313b3f;
+      --radius: 16px;
+      --shadow: 0 6px 36px 0 rgba(0,0,0,0.41);
+      --shadow-card: 0 4px 18px 0 rgba(22,24,28,0.12);
+      --search-height: 52px;
+      --icon-size: 26px;
     }
 
-    html, body {
+    /* --- Parallax background --- */
+    body {
       margin: 0;
-      padding: 0;
       min-height: 100vh;
+      font-family: 'Inter', Arial, sans-serif;
       background: var(--main-bg);
       color: var(--text-main);
-      font-family: 'Inter', Arial, sans-serif;
-      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+    .parallax-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 110vh; z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .parallax-blur {
+      position: absolute; border-radius: 50%;
+      filter: blur(64px) brightness(0.6) opacity(0.5);
+      z-index: 0;
+      animation: parallax-move 30s linear infinite alternate;
+    }
+    .blur1 {
+      width: 340px; height: 340px;
+      background: radial-gradient(ellipse at 40% 60%, #212c38 0%, #212c38 60%, transparent 100%);
+      top: -100px; left: -90px;
+      animation-delay: 0s;
+    }
+    .blur2 {
+      width: 230px; height: 230px;
+      background: radial-gradient(ellipse at 80% 40%, #2e9da7 0%, #313b3f 80%, transparent 100%);
+      top: 60vh; left: 70vw;
+      animation-delay: 6s;
+    }
+    .blur3 {
+      width: 160px; height: 160px;
+      background: radial-gradient(ellipse at 20% 80%, #4ecdc4 0%, transparent 90%);
+      top: 53vh; left: 10vw;
+      animation-delay: 12s;
+    }
+    .blur4 {
+      width: 200px; height: 120px;
+      background: linear-gradient(115deg, #1e2226 10%, #222328 90%);
+      top: 15vh; left: 62vw;
+      animation-delay: 3s;
+    }
+    @keyframes parallax-move {
+      0%   { transform: translateY(0) scale(1); }
+      50%  { transform: translateY(-40px) scale(1.07); }
+      100% { transform: translateY(0) scale(1); }
     }
 
-    body {
+    /* --- Layout --- */
+    .main-content {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      min-height: 100vh;
-      padding: 0;
+      padding-top: 7vh;
+      padding-bottom: 30px;
     }
 
-    .header {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 32px;
-      margin-bottom: 24px;
-    }
-
+    /* Logo */
     .logo {
-      width: 96px;
-      height: 96px;
+      display: block;
+      width: 78px; height: 78px;
+      margin: 0 auto 18px auto;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.025);
+      box-shadow: 0 2px 10px 0 rgba(20,24,28,0.13);
       object-fit: contain;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      margin-bottom: 12px;
-      box-shadow: 0 6px 22px 0 rgba(0,0,0,0.18);
       user-select: none;
     }
 
+    /* Titre */
     .title {
-      font-size: 2.2rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4));
-      background-size: 200% 200%;
-      color: transparent;
-      background-clip: text;
-      -webkit-background-clip: text;
-      animation: gradient-move 6s ease-in-out infinite;
-      margin-bottom: 4px;
+      font-size: 2.1rem;
+      font-weight: 600;
       letter-spacing: 0.02em;
+      color: var(--text-main);
+      margin-bottom: 30px;
       text-align: center;
+      text-shadow: 0 2px 12px #0004;
+      background: none;
     }
 
-    @keyframes gradient-move {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
-
-    .subtitle {
-      font-size: 1.07rem;
-      font-weight: 400;
-      color: var(--text-muted);
-      margin-bottom: 0;
-    }
-
-    /* Barre de recherche */
+    /* Barre de recherche avec loupe */
     .search-container {
       width: 100%;
-      max-width: 500px;
-      padding: 0 6vw;
+      max-width: 430px;
+      margin: 0 auto 30px auto;
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      align-items: stretch;
-      margin: 20px 0 22px 0;
+      position: relative;
+      z-index: 2;
     }
 
     .search-box {
+      width: 100%;
       position: relative;
-      flex: 1 1 auto;
       display: flex;
       align-items: center;
+      justify-content: center;
     }
 
     #search-bar {
       width: 100%;
-      padding: 15px 20px;
-      font-size: 1.03rem;
-      color: #fff;
-      background: #181818;
-      border: 2.5px solid transparent;
+      height: var(--search-height);
+      padding: 0 48px 0 20px;
+      font-size: 1.07rem;
+      color: #eaeaea;
+      background: var(--glass);
       border-radius: var(--radius);
+      border: 1.7px solid var(--border-glass);
       outline: none;
-      transition: box-shadow 0.25s, border-color 0.3s;
       box-shadow: var(--shadow);
+      filter: blur(0);
+      transition:
+        box-shadow 0.22s,
+        border 0.28s,
+        background 0.19s;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       z-index: 2;
       position: relative;
+      letter-spacing: 0.01em;
+      font-weight: 500;
     }
-
     #search-bar::placeholder {
       color: #444;
-      letter-spacing: 0.02em;
+      opacity: 1;
+      font-weight: 400;
+      font-size: 1.01em;
     }
-
-    /* Halo animé */
     .search-box.active #search-bar {
-      border-color: transparent;
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.02),
-        0 0 20px 3px #ff7eb380, 
-        0 0 30px 8px #57c6e170,
-        0 0 70px 20px #f7b26750;
-      animation: halo 1.7s linear infinite;
+      border: 1.7px solid var(--accent);
+      box-shadow:
+        0 0 0 2.5px #273a3f3a,
+        0 0 15px 1.5px var(--halo1),
+        0 0 32px 8px var(--halo2);
     }
 
-    @keyframes halo {
-      0% {
-        box-shadow:
-          0 0 0 4px rgba(255, 255, 255, 0.02),
-          0 0 20px 3px #ff7eb380, 
-          0 0 30px 8px #57c6e170,
-          0 0 70px 20px #f7b26750;
-      }
-      33% {
-        box-shadow:
-          0 0 0 4px rgba(255, 255, 255, 0.02),
-          0 0 20px 3px #5efc8d90, 
-          0 0 35px 8px #ff7eb380,
-          0 0 65px 18px #57c6e170;
-      }
-      66% {
-        box-shadow:
-          0 0 0 4px rgba(255, 255, 255, 0.02),
-          0 0 20px 3px #f7b26780, 
-          0 0 30px 8px #5efc8d90,
-          0 0 70px 20px #ff7eb380;
-      }
-      100% {
-        box-shadow:
-          0 0 0 4px rgba(255, 255, 255, 0.02),
-          0 0 20px 3px #ff7eb380, 
-          0 0 30px 8px #57c6e170,
-          0 0 70px 20px #f7b26750;
-      }
-    }
-
-    .search-btn {
-      margin-left: 10px;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4));
-      background-size: 200% 200%;
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 600;
+    .search-icon-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: var(--icon-size);
+      width: var(--icon-size);
+      padding: 0;
+      background: none;
       border: none;
       outline: none;
-      border-radius: var(--radius);
-      padding: 0 22px;
       cursor: pointer;
-      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16);
-      transition: background 0.25s, box-shadow 0.22s;
-      animation: gradient-move 8s ease-in-out infinite;
       z-index: 3;
-      height: 50px;
       display: flex;
       align-items: center;
+      justify-content: center;
+      opacity: 0.74;
+      transition: opacity 0.18s;
+    }
+    .search-icon-btn:hover,
+    .search-icon-btn:focus {
+      opacity: 1;
+    }
+    .search-icon-svg {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      stroke: #b1b1b1;
+      stroke-width: 2.2;
+      fill: none;
+      transition: stroke 0.18s;
+    }
+    .search-box.active .search-icon-svg {
+      stroke: var(--accent);
     }
 
-    .search-btn:active {
-      box-shadow: 0 0 0 3px #fff2;
-      background-position: 100% 0;
-    }
-
-    /* Conteneur résultats */
+    /* Résultats */
     #results-container {
       width: 100%;
-      max-width: 680px;
-      padding: 0 6vw;
-      margin-top: 10px;
+      max-width: 560px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
-      min-height: 80px;
-      margin-bottom: 40px;
+      gap: 22px;
+      z-index: 2;
     }
 
-    /* Carte résultat */
     .result-card {
       width: 100%;
       background: var(--card-bg);
       border-radius: calc(var(--radius) + 2px);
-      box-shadow: 0 6px 36px 0 rgba(0,0,0,0.55), 0 2px 12px 0 rgba(52,52,52,0.09);
-      padding: 22px 22px 16px 22px;
+      box-shadow: var(--shadow-card);
+      padding: 17px 22px 13px 22px;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      border: 2px solid transparent;
-      transition: box-shadow 0.2s, border 0.22s, transform 0.2s;
+      border: 1.2px solid var(--border-glass);
+      transition: box-shadow 0.18s, border 0.18s, transform 0.2s, background 0.24s;
       position: relative;
-      overflow: hidden;
       min-width: 0;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      overflow: hidden;
+      align-items: flex-start;
     }
-
     .result-card:hover {
-      box-shadow: 0 12px 40px 0 rgba(31,211,255,0.20), 0 4px 20px 0 rgba(52,52,52,0.14);
-      border: 2px solid var(--accent2);
-      transform: translateY(-4px) scale(1.018);
-      z-index: 2;
+      box-shadow: 0 8px 28px 0 rgba(46,205,196,0.10), 0 4px 20px 0 rgba(52,52,52,0.13);
+      border: 1.2px solid var(--accent);
+      background: rgba(34,46,48,0.97);
+      transform: translateY(-2px) scale(1.012);
     }
-
     .result-link {
-      font-size: 1.25rem;
+      font-size: 1.13rem;
       font-weight: 600;
-      color: var(--accent1);
-      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4));
-      background-size: 160% 160%;
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
+      color: var(--text-main);
       text-decoration: none;
-      margin-bottom: 8px;
-      transition: color 0.2s;
+      margin-bottom: 6px;
+      line-height: 1.22;
       word-break: break-all;
+      filter: brightness(0.97);
+      transition: color 0.16s, filter 0.18s;
+      background: linear-gradient(90deg, #3e726e, #4ecdc4 60%, #313b3f 100%);
+      background-size: 160% 160%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
     }
-
     .result-link:hover {
-      filter: brightness(1.25);
+      filter: brightness(1.19);
       text-decoration: underline;
     }
-
     .result-desc {
-      font-size: 1.04rem;
+      font-size: 1.01rem;
       color: var(--text-muted);
-      margin: 6px 0 0 0;
+      margin: 3px 0 0 0;
       line-height: 1.5;
+      font-weight: 400;
       word-break: break-word;
       letter-spacing: 0.01em;
-      font-weight: 400;
     }
 
+    /* Responsive */
     @media (max-width: 700px) {
-      .header {margin-top: 20px;}
-      .title {font-size: 1.55rem;}
-      .logo {width: 70px; height: 70px;}
-      .search-container,
-      #results-container {
-        max-width: 100vw;
-        padding: 0 2vw;
-      }
-      .result-card {padding: 18px 10px 14px 14px;}
-      .result-link {font-size: 1.08rem;}
-      .result-desc {font-size: 0.97rem;}
+      .main-content {padding-top: 4vh;}
+      .logo {width: 56px; height: 56px; margin-bottom: 10px;}
+      .title {font-size: 1.34rem; margin-bottom: 19px;}
+      .search-container {max-width: 99vw;}
+      #results-container {max-width: 99vw;}
+      .result-card {padding: 14px 9px 8px 12px;}
+      .result-link {font-size: 1.01rem;}
+      .result-desc {font-size: 0.95rem;}
     }
-
-    @media (max-width: 430px) {
-      .title {font-size: 1.01rem;}
-      .logo {width: 48px; height: 48px;}
-      .header {margin-bottom: 14px;}
-      .search-btn {font-size: 0.99rem; padding: 0 11px; height: 41px;}
-      #search-bar {padding: 10px 10px;}
-      #results-container {gap: 15px;}
-      .result-card {padding: 13px 6px 8px 8px;}
+    @media (max-width: 440px) {
+      .title {font-size: 1.03rem;}
+      .logo {width: 36px; height: 36px;}
+      .main-content {padding-top: 10vw;}
+      .search-box {width: 100%;}
+      #search-bar {padding: 0 40px 0 9px; font-size: 0.98rem;}
+      .search-icon-btn {right: 5px;}
+      .result-card {padding: 9px 4px 5px 8px;}
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <img id="logo" src="logo.png" alt="Quest Logo" class="logo" onerror="this.style.display='none';document.getElementById('fallback-logo').style.display='block';">
-    <div id="fallback-logo" style="display:none;font-weight:600;font-size:2.2rem;color:#ff7eb3;padding:20px 0 8px 0;letter-spacing:0.03em;">
-      Quest
-    </div>
-    <div class="title">Tracklock mode</div>
-    <div class="subtitle">Moteur de recherche local élégant et rapide, 100% homemade.</div>
+  <!-- Parallax décor -->
+  <div class="parallax-bg">
+    <div class="parallax-blur blur1"></div>
+    <div class="parallax-blur blur2"></div>
+    <div class="parallax-blur blur3"></div>
+    <div class="parallax-blur blur4"></div>
   </div>
-  <form class="search-container" id="search-form" autocomplete="off">
-    <div class="search-box" id="search-box">
-      <input type="text" id="search-bar" placeholder="Recherchez un site, un outil, une ressource..." autocomplete="off" />
-    </div>
-    <button type="submit" class="search-btn">Rechercher</button>
-  </form>
-  <div id="results-container"></div>
-
+  <!-- Contenu principal -->
+  <div class="main-content">
+    <img src="trracklock-mode.png" alt="Logo Tracklock" class="logo" loading="lazy"
+         onerror="this.style.display='none';">
+    <div class="title">Tracklock mode</div>
+    <form class="search-container" id="search-form" autocomplete="off" spellcheck="false">
+      <div class="search-box" id="search-box">
+        <input type="text" id="search-bar" placeholder="Recherche confidentielle..." autocomplete="off" />
+        <button type="submit" class="search-icon-btn" aria-label="Rechercher">
+          <!-- Loupe SVG discrète, grise -->
+          <svg class="search-icon-svg" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8.1" />
+            <line x1="18" y1="18" x2="15.2" y2="15.2" />
+          </svg>
+        </button>
+      </div>
+    </form>
+    <div id="results-container"></div>
+  </div>
   <script>
     // Dictionnaire exhaustif d'exemples (personnalisez à volonté !)
     const data = [
@@ -386,7 +405,7 @@
     const resultsContainer = document.getElementById("results-container");
     const searchBox = document.getElementById("search-box");
 
-    // Animation halo selon texte
+    // Halo doux et réduit
     function updateHalo() {
       if (searchBar.value.trim() === "") {
         searchBox.classList.remove("active");
@@ -396,7 +415,7 @@
     }
     searchBar.addEventListener("input", updateHalo);
 
-    // Recherche (sur clic bouton ou Entrée)
+    // Recherche seulement sur clic ou Entrée
     function doSearch(e) {
       if (e) e.preventDefault();
       updateHalo();
@@ -426,21 +445,28 @@
       } else {
         const nothing = document.createElement("div");
         nothing.className = "result-card";
-        nothing.innerHTML = `<div class="result-desc">Aucun résultat trouvé. Essayez un autre mot-clé ou explorez le catalogue !</div>`;
+        nothing.innerHTML = `<div class="result-desc">Aucun résultat trouvé.</div>`;
         resultsContainer.appendChild(nothing);
       }
     }
 
     searchForm.addEventListener("submit", doSearch);
-    // Optionnel : Entrée dans le champ lance la recherche (grâce au formulaire)
 
+    // Parallax interaction selon mouvement souris
+    document.addEventListener('mousemove', function(e) {
+      const x = e.clientX / window.innerWidth - 0.5;
+      const y = e.clientY / window.innerHeight - 0.5;
+      document.querySelectorAll('.parallax-blur').forEach((el, idx) => {
+        el.style.transform = `translate(${x*22*(idx+1)}px, ${y*16*(idx+1)}px) scale(1)`;
+      });
+    });
     // Sur mobile, focus sur la barre de recherche au chargement
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         if (window.innerWidth < 600) {
           searchBar.focus();
         }
-      }, 250);
+      }, 200);
     });
   </script>
 </body>
