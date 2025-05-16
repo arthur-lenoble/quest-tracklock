@@ -4,127 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tracklock Mode - Quest</title>
-  <meta name="theme-color" content="#101214">
+  <meta name="theme-color" content="#111">
   <style>
     :root {
-      --main-bg: #101214;
-      --glass: rgba(17,18,21,0.83);
-      --glass-blur: blur(8px);
-      --card-bg: rgba(22,24,28,0.95);
+      --main-bg: #111;
+      --card-bg: #18191b;
       --border-glass: rgba(255,255,255,0.07);
       --text-main: #eaeaea;
       --text-muted: #b1b1b1;
       --accent: #4ecdc4;
-      --halo1: #2e9da7;
-      --halo2: #313b3f;
-      --radius: 16px;
-      --shadow: 0 6px 36px 0 rgba(0,0,0,0.41);
-      --shadow-card: 0 4px 18px 0 rgba(22,24,28,0.12);
-      --search-height: 52px;
-      --icon-size: 26px;
+      --radius: 18px;
+      --shadow: 0 8px 36px 0 rgba(0,0,0,0.4);
+      --shadow-card: 0 4px 18px 0 rgba(22,24,28,0.13);
+      --search-height: 62px;
+      --icon-size: 32px;
     }
-
-    /* --- Parallax background --- */
-    body {
-      margin: 0;
+    html,body {
+      margin: 0; padding: 0;
       min-height: 100vh;
-      font-family: 'Inter', Arial, sans-serif;
       background: var(--main-bg);
       color: var(--text-main);
-      overflow-x: hidden;
+      font-family: 'Inter', Arial, sans-serif;
     }
-    .parallax-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 110vh; z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .parallax-blur {
-      position: absolute; border-radius: 50%;
-      filter: blur(64px) brightness(0.6) opacity(0.5);
-      z-index: 0;
-      animation: parallax-move 30s linear infinite alternate;
-    }
-    .blur1 {
-      width: 340px; height: 340px;
-      background: radial-gradient(ellipse at 40% 60%, #212c38 0%, #212c38 60%, transparent 100%);
-      top: -100px; left: -90px;
-      animation-delay: 0s;
-    }
-    .blur2 {
-      width: 230px; height: 230px;
-      background: radial-gradient(ellipse at 80% 40%, #2e9da7 0%, #313b3f 80%, transparent 100%);
-      top: 60vh; left: 70vw;
-      animation-delay: 6s;
-    }
-    .blur3 {
-      width: 160px; height: 160px;
-      background: radial-gradient(ellipse at 20% 80%, #4ecdc4 0%, transparent 90%);
-      top: 53vh; left: 10vw;
-      animation-delay: 12s;
-    }
-    .blur4 {
-      width: 200px; height: 120px;
-      background: linear-gradient(115deg, #1e2226 10%, #222328 90%);
-      top: 15vh; left: 62vw;
-      animation-delay: 3s;
-    }
-    @keyframes parallax-move {
-      0%   { transform: translateY(0) scale(1); }
-      50%  { transform: translateY(-40px) scale(1.07); }
-      100% { transform: translateY(0) scale(1); }
-    }
-
-    /* --- Layout --- */
-    .main-content {
-      position: relative;
-      z-index: 2;
-      min-height: 100vh;
+    body {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 7vh;
-      padding-bottom: 30px;
+      min-height: 100vh;
+      width: 100vw;
     }
-
-    /* Logo */
-    .logo {
-      display: block;
-      width: 150px; height: 150px;
-      margin: 0 auto 18px auto;
-      border-radius: 15px;
-      background: rgba(255,255,255,0.025);
-      box-shadow: 0 2px 10px 0 rgba(20,24,28,0.13);
-      object-fit: contain;
-      user-select: none;
-    }
-
-    /* Titre */
-    .title {
-      font-size: 2.1rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: var(--text-main);
-      margin-bottom: 30px;
-      text-align: center;
-      text-shadow: 0 2px 12px #0004;
-      background: none;
-    }
-
-    /* Barre de recherche avec loupe */
-    .search-container {
-      width: 100%;
-      max-width: 430px;
-      margin: 0 auto 30px auto;
+    .main-content {
+      width: 100vw;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding-top: 5vh;
+      padding-bottom: 40px;
       position: relative;
+    }
+    .logo {
+      display: block;
+      width: 210px; height: 210px;
+      max-width: 90vw; max-height: 40vh;
+      margin: 0 auto 32px auto;
+      border-radius: 22px;
+      background: rgba(0,0,0,0.06);
+      object-fit: contain;
+      user-select: none;
+      box-shadow: 0 4px 38px 0 #0009;
+    }
+    .title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--text-main);
+      margin-bottom: 32px;
+      text-align: center;
+      text-shadow: 0 2px 14px #0006;
+    }
+    .search-container {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto 34px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       z-index: 2;
     }
-
     .search-box {
       width: 100%;
       position: relative;
@@ -132,47 +81,36 @@
       align-items: center;
       justify-content: center;
     }
-
     #search-bar {
       width: 100%;
       height: var(--search-height);
-      padding: 0 48px 0 20px;
-      font-size: 1.07rem;
+      padding: 0 56px 0 22px;
+      font-size: 1.19rem;
       color: #eaeaea;
-      background: var(--glass);
+      background: var(--card-bg);
       border-radius: var(--radius);
-      border: 1.7px solid var(--border-glass);
+      border: 1.9px solid var(--border-glass);
       outline: none;
       box-shadow: var(--shadow);
-      filter: blur(0);
-      transition:
-        box-shadow 0.22s,
-        border 0.28s,
-        background 0.19s;
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      z-index: 2;
-      position: relative;
-      letter-spacing: 0.01em;
       font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: box-shadow 0.18s, border 0.17s, background 0.18s;
     }
     #search-bar::placeholder {
       color: #444;
-      opacity: 1;
       font-weight: 400;
-      font-size: 1.01em;
+      font-size: 1.04em;
+      opacity: 1;
     }
     .search-box.active #search-bar {
-      border: 1.7px solid var(--accent);
+      border: 1.9px solid var(--accent);
       box-shadow:
-        0 0 0 2.5px #273a3f3a,
-        0 0 15px 1.5px var(--halo1),
-        0 0 32px 8px var(--halo2);
+        0 0 0 2px #222b2b2c,
+        0 0 8px 1.5px var(--accent);
     }
-
     .search-icon-btn {
       position: absolute;
-      right: 14px;
+      right: 18px;
       top: 50%;
       transform: translateY(-50%);
       height: var(--icon-size);
@@ -186,8 +124,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0.74;
-      transition: opacity 0.18s;
+      opacity: 0.7;
+      transition: opacity 0.15s;
     }
     .search-icon-btn:hover,
     .search-icon-btn:focus {
@@ -197,18 +135,16 @@
       width: var(--icon-size);
       height: var(--icon-size);
       stroke: #b1b1b1;
-      stroke-width: 2.2;
+      stroke-width: 2.3;
       fill: none;
-      transition: stroke 0.18s;
+      transition: stroke 0.16s;
     }
     .search-box.active .search-icon-svg {
       stroke: var(--accent);
     }
-
-    /* Résultats */
     #results-container {
       width: 100%;
-      max-width: 560px;
+      max-width: 600px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -216,53 +152,50 @@
       gap: 22px;
       z-index: 2;
     }
-
     .result-card {
       width: 100%;
       background: var(--card-bg);
-      border-radius: calc(var(--radius) + 2px);
+      border-radius: calc(var(--radius) + 3px);
       box-shadow: var(--shadow-card);
-      padding: 17px 22px 13px 22px;
+      padding: 19px 26px 16px 26px;
       display: flex;
       flex-direction: column;
-      border: 1.2px solid var(--border-glass);
-      transition: box-shadow 0.18s, border 0.18s, transform 0.2s, background 0.24s;
+      border: 1.5px solid var(--border-glass);
+      transition: box-shadow 0.17s, border 0.18s, transform 0.15s, background 0.16s;
       position: relative;
       min-width: 0;
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
       overflow: hidden;
       align-items: flex-start;
     }
     .result-card:hover {
-      box-shadow: 0 8px 28px 0 rgba(46,205,196,0.10), 0 4px 20px 0 rgba(52,52,52,0.13);
-      border: 1.2px solid var(--accent);
-      background: rgba(34,46,48,0.97);
+      box-shadow: 0 8px 38px 0 rgba(46,205,196,0.13), 0 4px 28px 0 rgba(52,52,52,0.15);
+      border: 1.5px solid var(--accent);
+      background: #202325;
       transform: translateY(-2px) scale(1.012);
     }
     .result-link {
-      font-size: 1.13rem;
+      font-size: 1.19rem;
       font-weight: 600;
       color: var(--text-main);
       text-decoration: none;
-      margin-bottom: 6px;
-      line-height: 1.22;
+      margin-bottom: 7px;
+      line-height: 1.23;
       word-break: break-all;
-      filter: brightness(0.97);
-      transition: color 0.16s, filter 0.18s;
+      filter: brightness(0.98);
+      transition: color 0.14s, filter 0.18s;
       background: linear-gradient(90deg, #3e726e, #4ecdc4 60%, #313b3f 100%);
-      background-size: 160% 160%;
+      background-size: 140% 140%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       text-fill-color: transparent;
     }
     .result-link:hover {
-      filter: brightness(1.19);
+      filter: brightness(1.18);
       text-decoration: underline;
     }
     .result-desc {
-      font-size: 1.01rem;
+      font-size: 1.04rem;
       color: var(--text-muted);
       margin: 3px 0 0 0;
       line-height: 1.5;
@@ -270,46 +203,42 @@
       word-break: break-word;
       letter-spacing: 0.01em;
     }
-
+    .similar-title {
+      font-size: 1.07rem;
+      color: #4ecdc4;
+      margin: 18px 0 4px 0;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-align: left;
+      width: 100%;
+    }
     /* Responsive */
-    @media (max-width: 700px) {
-      .main-content {padding-top: 4vh;}
-      .logo {width: 56px; height: 56px; margin-bottom: 10px;}
-      .title {font-size: 1.34rem; margin-bottom: 19px;}
+    @media (max-width: 900px) {
+      .main-content {padding-top: 3vw;}
+      .logo {width: 130px; height: 130px;}
+      .title {font-size: 1.45rem; margin-bottom: 16px;}
       .search-container {max-width: 99vw;}
       #results-container {max-width: 99vw;}
-      .result-card {padding: 14px 9px 8px 12px;}
-      .result-link {font-size: 1.01rem;}
-      .result-desc {font-size: 0.95rem;}
+      .result-card {padding: 13px 12px 10px 13px;}
+      .result-link {font-size: 1.02rem;}
+      .result-desc {font-size: 0.97rem;}
     }
-    @media (max-width: 440px) {
-      .title {font-size: 1.03rem;}
-      .logo {width: 36px; height: 36px;}
-      .main-content {padding-top: 10vw;}
-      .search-box {width: 100%;}
-      #search-bar {padding: 0 40px 0 9px; font-size: 0.98rem;}
-      .search-icon-btn {right: 5px;}
-      .result-card {padding: 9px 4px 5px 8px;}
+    @media (max-width: 500px) {
+      .logo {width: 80vw; height: 80vw; max-width: 270px; max-height: 41vw;}
+      .title {font-size: 1.02rem;}
+      .main-content {padding-top: 4vw;}
     }
   </style>
 </head>
 <body>
-  <!-- Parallax décor -->
-  <div class="parallax-bg">
-    <div class="parallax-blur blur1"></div>
-    <div class="parallax-blur blur2"></div>
-    <div class="parallax-blur blur3"></div>
-    <div class="parallax-blur blur4"></div>
-  </div>
-  <!-- Contenu principal -->
   <div class="main-content">
     <img src="trracklock-mode.png" alt="Logo Tracklock" class="logo" loading="lazy"
          onerror="this.style.display='none';">
+    <div class="title">Tracklock mode</div>
     <form class="search-container" id="search-form" autocomplete="off" spellcheck="false">
       <div class="search-box" id="search-box">
         <input type="text" id="search-bar" placeholder="Recherche confidentielle..." autocomplete="off" />
         <button type="submit" class="search-icon-btn" aria-label="Rechercher">
-          <!-- Loupe SVG discrète, grise -->
           <svg class="search-icon-svg" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8.1" />
             <line x1="18" y1="18" x2="15.2" y2="15.2" />
@@ -320,95 +249,70 @@
     <div id="results-container"></div>
   </div>
   <script>
-    // Dictionnaire exhaustif d'exemples (personnalisez à volonté !)
+    // Plus de résultats, FR et internationaux
     const data = [
-      {
-        title: "Google",
-        url: "https://www.google.com",
-        description: "Le moteur de recherche le plus utilisé au monde, permettant de trouver des informations, des images, des actualités, et bien plus, avec une rapidité inégalée et une interface simple."
-      },
-      {
-        title: "Qwant",
-        url: "https://www.qwant.com",
-        description: "Moteur de recherche européen respectueux de la vie privée, qui ne trace pas ses utilisateurs et propose une interface moderne avec résultats enrichis, actualités, réseaux sociaux et musique."
-      },
-      {
-        title: "GitHub",
-        url: "https://github.com",
-        description: "Plateforme collaborative incontournable pour héberger, versionner, partager, et contribuer à des projets de développement logiciel open source ou privés, avec gestion avancée des issues et pull requests."
-      },
-      {
-        title: "Quest",
-        url: "https://github.com/arthur-lenoble/quest",
-        description: "Projet open source réunissant des outils de recherche et d'exploration, facilitant la navigation dans de larges bases de code ou de documentation, pensé pour la performance et l'ergonomie."
-      },
-      {
-        title: "Tracklock Mode",
-        url: "https://github.com/arthur-lenoble/quest-tracklock",
-        description: "Version spéciale de Quest axée sur la confidentialité et la recherche locale, avec moteur 100% JavaScript, interface sombre et animations modernes pour une expérience unique."
-      },
-      {
-        title: "MDN Web Docs",
-        url: "https://developer.mozilla.org",
-        description: "Documentation de référence pour HTML, CSS, JavaScript et les APIs web : tutoriels, guides, et exemples pour tous les niveaux, édités par la communauté et Mozilla."
-      },
-      {
-        title: "Stack Overflow",
-        url: "https://stackoverflow.com",
-        description: "La plus grande plateforme de questions/réponses dédiée aux développeurs, couvrant tous les langages, frameworks et problématiques techniques avec votes, badges et modération communautaire."
-      },
-      {
-        title: "Wikipedia",
-        url: "https://fr.wikipedia.org",
-        description: "L'encyclopédie collaborative et multilingue en ligne, offrant un accès libre à des millions d’articles rédigés et maintenus par des bénévoles du monde entier."
-      },
-      {
-        title: "OpenAI",
-        url: "https://openai.com",
-        description: "Organisation pionnière en intelligence artificielle, créatrice de modèles comme GPT et DALL·E, proposant des API pour intégrer l’IA dans des applications et des outils innovants."
-      },
-      {
-        title: "Figma",
-        url: "https://figma.com",
-        description: "Outil collaboratif de design d’interface (UI/UX), permettant de prototyper, commenter et co-créer en temps réel sur le web, utilisé par les designers et développeurs du monde entier."
-      },
-      {
-        title: "Canva",
-        url: "https://www.canva.com",
-        description: "Plateforme intuitive pour créer des visuels, présentations, logos et contenus graphiques, avec de nombreux modèles gratuits, outils de collaboration et export multi-formats."
-      },
-      {
-        title: "Notion",
-        url: "https://www.notion.so",
-        description: "Espace de travail tout-en-un pour la prise de notes, la gestion de projets, bases de données, calendriers et wikis : personnalisable et connecté, aussi bien pour les équipes que les particuliers."
-      },
-      {
-        title: "Framasoft",
-        url: "https://framasoft.org",
-        description: "Association française dédiée à la promotion du logiciel libre, offrant de nombreux services alternatifs respectueux de la vie privée (Framadate, Framapad, Framagenda…)."
-      },
-      {
-        title: "Coursera",
-        url: "https://www.coursera.org",
-        description: "Plateforme d’apprentissage en ligne proposant des cours, spécialisations et certifications de grandes universités et entreprises, dans tous les domaines scientifiques et professionnels."
-      },
-      {
-        title: "Hacker News",
-        url: "https://news.ycombinator.com",
-        description: "Communauté de partage d’articles et de discussions sur la technologie, les startups, la programmation, la science et l’entrepreneuriat, animée par Y Combinator."
-      },
-      {
-        title: "Opal Assistant",
-        url: "https://arthur-lenoble.github.io/opal",
-        description: "Un assitant IA ultrarapide à basse consommation d'énergie pour booster votre créativité et répondre à vos questions.",
+      { title: "Google", url: "https://www.google.com", description: "Le moteur de recherche le plus utilisé au monde, simple, rapide et efficace pour tous les besoins." },
+      { title: "Qwant", url: "https://www.qwant.com", description: "Moteur européen respectueux de la vie privée, résultats web, images, actus et musique." },
+      { title: "GitHub", url: "https://github.com", description: "Plateforme de développement collaboratif et open source avec gestion de versions, issues et pull requests." },
+      { title: "Quest", url: "https://github.com/arthur-lenoble/quest", description: "Projet open source pour explorer des bases de code volumineuses et des documentations." },
+      { title: "Tracklock Mode", url: "https://github.com/arthur-lenoble/quest-tracklock", description: "Version incognito de Quest, recherche locale élégante et ultra confidentielle." },
+      { title: "MDN Web Docs", url: "https://developer.mozilla.org", description: "Documentation web complète pour HTML, CSS, JavaScript, APIs, ressources pour tous niveaux." },
+      { title: "Stack Overflow", url: "https://stackoverflow.com", description: "Plateforme de questions/réponses pour développeurs, entraide sur tous les langages et frameworks." },
+      { title: "Wikipedia", url: "https://fr.wikipedia.org", description: "Encyclopédie libre multilingue, millions d’articles rédigés par la communauté mondiale." },
+      { title: "OpenAI", url: "https://openai.com", description: "Leader en intelligence artificielle, créateur de GPT, DALL·E et API IA pour développeurs." },
+      { title: "Figma", url: "https://figma.com", description: "Design d’interface UI/UX collaboratif en ligne avec prototypage en temps réel." },
+      { title: "Canva", url: "https://www.canva.com", description: "Création graphique et documents, modèles gratuits, outils intuitifs et export multi-formats." },
+      { title: "Notion", url: "https://www.notion.so", description: "Notes, gestion de projet, bases de données, wikis : espace de travail connecté et personnalisable." },
+      { title: "Framasoft", url: "https://framasoft.org", description: "Association française du libre, nombreux services alternatifs respectueux de la vie privée." },
+      { title: "Coursera", url: "https://www.coursera.org", description: "Cours et certifications universitaires accessibles à tous, MOOC, domaines variés." },
+      { title: "Hacker News", url: "https://news.ycombinator.com", description: "Communauté tech et startup, articles, discussions et partages autour de l’innovation." },
+      { title: "Opal Assistant", url: "https://arthur-lenoble.github.io/opal", description: "Assistant IA ultrarapide, basse consommation, pour booster créativité et productivité." },
+      { title: "Le Monde", url: "https://lemonde.fr", description: "Actualités françaises et internationales, analyses, opinions et reportages de référence." },
+      { title: "Libération", url: "https://liberation.fr", description: "Journal d’actualité, société, politique, culture, environnement, analyses et débats." },
+      { title: "France Inter", url: "https://www.franceinter.fr", description: "Radio généraliste française, podcasts, émissions d’actualité, culture et société." },
+      { title: "INRIA", url: "https://inria.fr", description: "Institut national de recherche en sciences du numérique, innovations et publications scientifiques." },
+      { title: "Mastodon", url: "https://mastodon.social", description: "Réseau social décentralisé, open source, respectueux de la vie privée." },
+      { title: "Proton Mail", url: "https://proton.me", description: "Messagerie chiffrée suisse, confidentialité, open source, accès web et mobile." },
+      { title: "Signal", url: "https://signal.org", description: "Messagerie instantanée ultra-sécurisée, open source, appels et messages chiffrés de bout en bout." },
+      { title: "DuckDuckGo", url: "https://duckduckgo.com", description: "Moteur de recherche qui ne vous trace pas, interface épurée et résultats globaux." },
+      { title: "Nextcloud", url: "https://nextcloud.com", description: "Stockage cloud privé et collaboratif, open source, synchronisation et partage sécurisés." },
+      { title: "Ubuntu", url: "https://ubuntu.com", description: "Distribution Linux populaire, gratuite, stable et simple à utiliser." },
+      { title: "La Quadrature du Net", url: "https://laquadrature.net", description: "Défense des libertés numériques, vie privée, surveillance, campagnes et analyses." },
+      { title: "OpenClassrooms", url: "https://openclassrooms.com", description: "Formations en ligne diplômantes, métiers du numérique, projets et mentorat." },
+      { title: "OVHcloud", url: "https://ovhcloud.com", description: "Leader européen du cloud, hébergement web, serveurs, solutions IA et data." },
+      { title: "La Poste", url: "https://laposte.fr", description: "Services postaux français, envois, suivi, banque, téléphonie, solutions numériques." },
+      { title: "France Culture", url: "https://franceculture.fr", description: "Radio culturelle française, podcasts, débats, philosophie, sciences, histoire." },
+      { title: "Numerama", url: "https://numerama.com", description: "Média tech et société numérique, actualités, guides, analyses, comparatifs." },
+      { title: "Sciences et Avenir", url: "https://sciencesetavenir.fr", description: "Magazine d’actualité scientifique, découvertes, vulgarisation, reportages." },
+      { title: "Data.gouv.fr", url: "https://data.gouv.fr", description: "Portail officiel des données publiques françaises, open data, visualisations et API." },
+      { title: "GitLab", url: "https://gitlab.com", description: "Plateforme DevOps open source pour héberger, collaborer et déployer du code." },
+      { title: "Zeste de Savoir", url: "https://zestedesavoir.com", description: "Communauté de partage de connaissances, articles, tutoriels, forums, sciences et tech." }
     ];
+
+    // Simple utilitaire de similarité (Levenshtein)
+    function levenshtein(a, b) {
+      if (a.length === 0) return b.length;
+      if (b.length === 0) return a.length;
+      const v0 = new Array(b.length + 1).fill(0);
+      const v1 = new Array(b.length + 1).fill(0);
+
+      for (let i = 0; i <= b.length; i++) v0[i] = i;
+      for (let i = 0; i < a.length; i++) {
+        v1[0] = i + 1;
+        for (let j = 0; j < b.length; j++) {
+          const cost = a[i] === b[j] ? 0 : 1;
+          v1[j + 1] = Math.min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost);
+        }
+        for (let j = 0; j <= b.length; j++) v0[j] = v1[j];
+      }
+      return v1[b.length];
+    }
 
     const searchBar = document.getElementById("search-bar");
     const searchForm = document.getElementById("search-form");
     const resultsContainer = document.getElementById("results-container");
     const searchBox = document.getElementById("search-box");
 
-    // Halo doux et réduit
     function updateHalo() {
       if (searchBar.value.trim() === "") {
         searchBox.classList.remove("active");
@@ -418,25 +322,80 @@
     }
     searchBar.addEventListener("input", updateHalo);
 
-    // Recherche seulement sur clic ou Entrée
     function doSearch(e) {
       if (e) e.preventDefault();
       updateHalo();
       const query = searchBar.value.trim().toLowerCase();
-      resultsContainer.innerHTML = ""; // reset
+      resultsContainer.innerHTML = "";
 
       if (query.length === 0) {
         searchBox.classList.remove("active");
         return;
       }
 
-      const results = data.filter(item =>
-        item.title.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query)
-      );
+      // Tri avancé : pertinence titre > description > similarité
+      let found = [];
+      let similar = [];
 
-      if (results.length > 0) {
-        results.forEach(result => {
+      // 1. Titre exact, puis titre partiel
+      found = data.filter(item =>
+        item.title.toLowerCase() === query
+      );
+      if (!found.length) {
+        found = data.filter(item =>
+          item.title.toLowerCase().includes(query)
+        );
+      }
+      // 2. Si pas assez, ajoute description partielle
+      if (found.length < 5) {
+        let descMatches = data.filter(item =>
+          !found.includes(item) && item.description.toLowerCase().includes(query)
+        );
+        found = found.concat(descMatches);
+      }
+      // 3. Similaires par Levenshtein (titre/desc)
+      if (found.length < 1) {
+        let scores = data.map(item => {
+          let tScore = levenshtein(item.title.toLowerCase(), query);
+          let dScore = levenshtein(item.description.toLowerCase(), query);
+          return { item, score: Math.min(tScore, dScore) };
+        });
+        scores.sort((a, b) => a.score - b.score);
+        similar = scores.slice(0, 5).map(s => s.item);
+      }
+
+      if (found.length > 0) {
+        found.slice(0, 10).forEach(result => {
+          const card = document.createElement("div");
+          card.className = "result-card";
+          card.innerHTML = `
+            <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${result.title}</a>
+            <div class="result-desc">${result.description}</div>
+          `;
+          resultsContainer.appendChild(card);
+        });
+        // Suggestions similaires si dispo et pas déjà listés
+        if (found.length < 5 && similar.length && !similar.every(r => found.includes(r))) {
+          const st = document.createElement("div");
+          st.className = "similar-title";
+          st.textContent = "Résultats similaires :";
+          resultsContainer.appendChild(st);
+          similar.filter(r => !found.includes(r)).slice(0, 5).forEach(result => {
+            const card = document.createElement("div");
+            card.className = "result-card";
+            card.innerHTML = `
+              <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${result.title}</a>
+              <div class="result-desc">${result.description}</div>
+            `;
+            resultsContainer.appendChild(card);
+          });
+        }
+      } else if (similar.length) {
+        const st = document.createElement("div");
+        st.className = "similar-title";
+        st.textContent = "Résultats similaires :";
+        resultsContainer.appendChild(st);
+        similar.forEach(result => {
           const card = document.createElement("div");
           card.className = "result-card";
           card.innerHTML = `
@@ -452,18 +411,9 @@
         resultsContainer.appendChild(nothing);
       }
     }
-
     searchForm.addEventListener("submit", doSearch);
 
-    // Parallax interaction selon mouvement souris
-    document.addEventListener('mousemove', function(e) {
-      const x = e.clientX / window.innerWidth - 0.5;
-      const y = e.clientY / window.innerHeight - 0.5;
-      document.querySelectorAll('.parallax-blur').forEach((el, idx) => {
-        el.style.transform = `translate(${x*22*(idx+1)}px, ${y*16*(idx+1)}px) scale(1)`;
-      });
-    });
-    // Sur mobile, focus sur la barre de recherche au chargement
+    // Mobile : focus auto
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         if (window.innerWidth < 600) {
