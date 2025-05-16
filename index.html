@@ -91,7 +91,7 @@
     /* Logo */
     .logo {
       display: block;
-      width: 78px; height: 78px;
+      width: 150px; height: 150px;
       margin: 0 auto 18px auto;
       border-radius: 15px;
       background: rgba(255,255,255,0.025);
@@ -305,7 +305,6 @@
   <div class="main-content">
     <img src="trracklock-mode.png" alt="Logo Tracklock" class="logo" loading="lazy"
          onerror="this.style.display='none';">
-    <div class="title">Tracklock mode</div>
     <form class="search-container" id="search-form" autocomplete="off" spellcheck="false">
       <div class="search-box" id="search-box">
         <input type="text" id="search-bar" placeholder="Recherche confidentielle..." autocomplete="off" />
@@ -397,7 +396,11 @@
         title: "Hacker News",
         url: "https://news.ycombinator.com",
         description: "Communauté de partage d’articles et de discussions sur la technologie, les startups, la programmation, la science et l’entrepreneuriat, animée par Y Combinator."
-      }
+      },
+      {
+        title: "Opal Assistant",
+        url: "https://arthur-lenoble.github.io/opal",
+        description: "Un assitant IA ultrarapide à basse consommation d'énergie pour booster votre créativité et répondre à vos questions.",
     ];
 
     const searchBar = document.getElementById("search-bar");
