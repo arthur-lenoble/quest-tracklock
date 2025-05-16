@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tracklock Mode - Quest</title>
   <meta name="theme-color" content="#111">
@@ -14,8 +16,7 @@
       --text-muted: #b1b1b1;
       --accent: #4ecdc4;
       --radius: 18px;
-      --shadow: 0 8px 36px 0 rgba(0,0,0,0.4);
-      --shadow-card: 0 4px 18px 0 rgba(22,24,28,0.13);
+      --shadow-card: 0 2px 10px 0 rgba(22,24,28,0.09);
       --search-height: 62px;
       --icon-size: 32px;
     }
@@ -30,7 +31,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       min-height: 100vh;
       width: 100vw;
     }
@@ -39,7 +39,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       min-height: 100vh;
       padding-top: 5vh;
       padding-bottom: 40px;
@@ -51,10 +50,11 @@
       max-width: 90vw; max-height: 40vh;
       margin: 0 auto 32px auto;
       border-radius: 22px;
-      background: rgba(0,0,0,0.06);
       object-fit: contain;
       user-select: none;
-      box-shadow: 0 4px 38px 0 #0009;
+      box-shadow: none;
+      background: none;
+      border: none;
     }
     .title {
       font-size: 2.4rem;
@@ -91,7 +91,6 @@
       border-radius: var(--radius);
       border: 1.9px solid var(--border-glass);
       outline: none;
-      box-shadow: var(--shadow);
       font-weight: 500;
       letter-spacing: 0.01em;
       transition: box-shadow 0.18s, border 0.17s, background 0.18s;
@@ -212,6 +211,12 @@
       text-align: left;
       width: 100%;
     }
+    mark {
+      background: #4ecdc44a;
+      color: inherit;
+      border-radius: 4px;
+      padding: 0 1.5px;
+    }
     /* Responsive */
     @media (max-width: 900px) {
       .main-content {padding-top: 3vw;}
@@ -229,6 +234,13 @@
       .main-content {padding-top: 4vw;}
     }
   </style>
+  <script>
+    // Anti clickjacking JS fallback (défense en profondeur)
+    if (window.top !== window.self) {
+      document.body.innerHTML = "";
+      window.top.location = window.self.location;
+    }
+  </script>
 </head>
 <body>
   <div class="main-content">
@@ -249,13 +261,20 @@
     <div id="results-container"></div>
   </div>
   <script>
-    // Plus de résultats, FR et internationaux
+    // DATA enrichie
     const data = [
       { title: "Google", url: "https://www.google.com", description: "Le moteur de recherche le plus utilisé au monde, simple, rapide et efficace pour tous les besoins." },
       { title: "Qwant", url: "https://www.qwant.com", description: "Moteur européen respectueux de la vie privée, résultats web, images, actus et musique." },
+      { title: "DuckDuckGo", url: "https://duckduckgo.com", description: "Moteur de recherche qui ne vous trace pas, interface épurée et résultats globaux." },
       { title: "GitHub", url: "https://github.com", description: "Plateforme de développement collaboratif et open source avec gestion de versions, issues et pull requests." },
+      { title: "GitLab", url: "https://gitlab.com", description: "Plateforme DevOps open source pour héberger, collaborer et déployer du code." },
+      { title: "Nextcloud", url: "https://nextcloud.com", description: "Stockage cloud privé et collaboratif, open source, synchronisation et partage sécurisés." },
+      { title: "Proton Mail", url: "https://proton.me", description: "Messagerie chiffrée suisse, confidentialité, open source, accès web et mobile." },
+      { title: "Signal", url: "https://signal.org", description: "Messagerie instantanée ultra-sécurisée, open source, appels et messages chiffrés de bout en bout." },
+      { title: "Mastodon", url: "https://mastodon.social", description: "Réseau social décentralisé, open source, respectueux de la vie privée." },
       { title: "Quest", url: "https://github.com/arthur-lenoble/quest", description: "Projet open source pour explorer des bases de code volumineuses et des documentations." },
       { title: "Tracklock Mode", url: "https://github.com/arthur-lenoble/quest-tracklock", description: "Version incognito de Quest, recherche locale élégante et ultra confidentielle." },
+      { title: "Opal Assistant", url: "https://arthur-lenoble.github.io/opal", description: "Assistant IA ultrarapide, basse consommation, pour booster créativité et productivité." },
       { title: "MDN Web Docs", url: "https://developer.mozilla.org", description: "Documentation web complète pour HTML, CSS, JavaScript, APIs, ressources pour tous niveaux." },
       { title: "Stack Overflow", url: "https://stackoverflow.com", description: "Plateforme de questions/réponses pour développeurs, entraide sur tous les langages et frameworks." },
       { title: "Wikipedia", url: "https://fr.wikipedia.org", description: "Encyclopédie libre multilingue, millions d’articles rédigés par la communauté mondiale." },
@@ -266,30 +285,21 @@
       { title: "Framasoft", url: "https://framasoft.org", description: "Association française du libre, nombreux services alternatifs respectueux de la vie privée." },
       { title: "Coursera", url: "https://www.coursera.org", description: "Cours et certifications universitaires accessibles à tous, MOOC, domaines variés." },
       { title: "Hacker News", url: "https://news.ycombinator.com", description: "Communauté tech et startup, articles, discussions et partages autour de l’innovation." },
-      { title: "Opal Assistant", url: "https://arthur-lenoble.github.io/opal", description: "Assistant IA ultrarapide, basse consommation, pour booster créativité et productivité." },
       { title: "Le Monde", url: "https://lemonde.fr", description: "Actualités françaises et internationales, analyses, opinions et reportages de référence." },
       { title: "Libération", url: "https://liberation.fr", description: "Journal d’actualité, société, politique, culture, environnement, analyses et débats." },
       { title: "France Inter", url: "https://www.franceinter.fr", description: "Radio généraliste française, podcasts, émissions d’actualité, culture et société." },
       { title: "INRIA", url: "https://inria.fr", description: "Institut national de recherche en sciences du numérique, innovations et publications scientifiques." },
-      { title: "Mastodon", url: "https://mastodon.social", description: "Réseau social décentralisé, open source, respectueux de la vie privée." },
-      { title: "Proton Mail", url: "https://proton.me", description: "Messagerie chiffrée suisse, confidentialité, open source, accès web et mobile." },
-      { title: "Signal", url: "https://signal.org", description: "Messagerie instantanée ultra-sécurisée, open source, appels et messages chiffrés de bout en bout." },
-      { title: "DuckDuckGo", url: "https://duckduckgo.com", description: "Moteur de recherche qui ne vous trace pas, interface épurée et résultats globaux." },
-      { title: "Nextcloud", url: "https://nextcloud.com", description: "Stockage cloud privé et collaboratif, open source, synchronisation et partage sécurisés." },
-      { title: "Ubuntu", url: "https://ubuntu.com", description: "Distribution Linux populaire, gratuite, stable et simple à utiliser." },
       { title: "La Quadrature du Net", url: "https://laquadrature.net", description: "Défense des libertés numériques, vie privée, surveillance, campagnes et analyses." },
       { title: "OpenClassrooms", url: "https://openclassrooms.com", description: "Formations en ligne diplômantes, métiers du numérique, projets et mentorat." },
       { title: "OVHcloud", url: "https://ovhcloud.com", description: "Leader européen du cloud, hébergement web, serveurs, solutions IA et data." },
-      { title: "La Poste", url: "https://laposte.fr", description: "Services postaux français, envois, suivi, banque, téléphonie, solutions numériques." },
       { title: "France Culture", url: "https://franceculture.fr", description: "Radio culturelle française, podcasts, débats, philosophie, sciences, histoire." },
       { title: "Numerama", url: "https://numerama.com", description: "Média tech et société numérique, actualités, guides, analyses, comparatifs." },
       { title: "Sciences et Avenir", url: "https://sciencesetavenir.fr", description: "Magazine d’actualité scientifique, découvertes, vulgarisation, reportages." },
       { title: "Data.gouv.fr", url: "https://data.gouv.fr", description: "Portail officiel des données publiques françaises, open data, visualisations et API." },
-      { title: "GitLab", url: "https://gitlab.com", description: "Plateforme DevOps open source pour héberger, collaborer et déployer du code." },
       { title: "Zeste de Savoir", url: "https://zestedesavoir.com", description: "Communauté de partage de connaissances, articles, tutoriels, forums, sciences et tech." }
     ];
 
-    // Simple utilitaire de similarité (Levenshtein)
+    // Levenshtein pour fuzzy search
     function levenshtein(a, b) {
       if (a.length === 0) return b.length;
       if (b.length === 0) return a.length;
@@ -306,6 +316,12 @@
         for (let j = 0; j <= b.length; j++) v0[j] = v1[j];
       }
       return v1[b.length];
+    }
+
+    function highlight(text, keyword) {
+      if (!keyword) return text;
+      const safe = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return text.replace(new RegExp(safe, "gi"), (match) => `<mark>${match}</mark>`);
     }
 
     const searchBar = document.getElementById("search-bar");
@@ -333,7 +349,7 @@
         return;
       }
 
-      // Tri avancé : pertinence titre > description > similarité
+      // Recherche avancée
       let found = [];
       let similar = [];
 
@@ -343,22 +359,31 @@
       );
       if (!found.length) {
         found = data.filter(item =>
-          item.title.toLowerCase().includes(query)
+          item.title.toLowerCase().startsWith(query)
         );
       }
-      // 2. Si pas assez, ajoute description partielle
       if (found.length < 5) {
+        let tpartial = data.filter(item =>
+          !found.includes(item) && item.title.toLowerCase().includes(query)
+        );
+        found = found.concat(tpartial);
+      }
+      // 2. Description ou URL partielle
+      if (found.length < 10) {
         let descMatches = data.filter(item =>
-          !found.includes(item) && item.description.toLowerCase().includes(query)
+          !found.includes(item) &&
+          (item.description.toLowerCase().includes(query) ||
+           item.url.toLowerCase().includes(query))
         );
         found = found.concat(descMatches);
       }
-      // 3. Similaires par Levenshtein (titre/desc)
+      // 3. Similaires par Levenshtein (titre/desc/url)
       if (found.length < 1) {
         let scores = data.map(item => {
           let tScore = levenshtein(item.title.toLowerCase(), query);
           let dScore = levenshtein(item.description.toLowerCase(), query);
-          return { item, score: Math.min(tScore, dScore) };
+          let uScore = levenshtein(item.url.toLowerCase(), query);
+          return { item, score: Math.min(tScore, dScore, uScore) };
         });
         scores.sort((a, b) => a.score - b.score);
         similar = scores.slice(0, 5).map(s => s.item);
@@ -369,8 +394,8 @@
           const card = document.createElement("div");
           card.className = "result-card";
           card.innerHTML = `
-            <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${result.title}</a>
-            <div class="result-desc">${result.description}</div>
+            <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${highlight(result.title, query)}</a>
+            <div class="result-desc">${highlight(result.description, query)}</div>
           `;
           resultsContainer.appendChild(card);
         });
@@ -384,8 +409,8 @@
             const card = document.createElement("div");
             card.className = "result-card";
             card.innerHTML = `
-              <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${result.title}</a>
-              <div class="result-desc">${result.description}</div>
+              <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${highlight(result.title, query)}</a>
+              <div class="result-desc">${highlight(result.description, query)}</div>
             `;
             resultsContainer.appendChild(card);
           });
@@ -399,8 +424,8 @@
           const card = document.createElement("div");
           card.className = "result-card";
           card.innerHTML = `
-            <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${result.title}</a>
-            <div class="result-desc">${result.description}</div>
+            <a class="result-link" href="${result.url}" target="_blank" rel="noopener noreferrer">${highlight(result.title, query)}</a>
+            <div class="result-desc">${highlight(result.description, query)}</div>
           `;
           resultsContainer.appendChild(card);
         });
