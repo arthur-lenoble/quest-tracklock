@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
+  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'; default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tracklock Mode - Quest</title>
   <meta name="theme-color" content="#111">
@@ -235,20 +235,24 @@
     }
   </style>
   <script>
-    // Anti clickjacking JS fallback (défense en profondeur)
+    // Défense anti-clickjacking JS fallback
     if (window.top !== window.self) {
       document.body.innerHTML = "";
       window.top.location = window.self.location;
     }
+    // Désactive le glisser-déposer de fichiers (XSS)
+    document.addEventListener('dragover', e => e.preventDefault(), false);
+    document.addEventListener('drop', e => e.preventDefault(), false);
   </script>
 </head>
 <body>
   <div class="main-content">
     <img src="trracklock-mode.png" alt="Logo Tracklock" class="logo" loading="lazy"
          onerror="this.style.display='none';">
+    <div class="title">Tracklock mode</div>
     <form class="search-container" id="search-form" autocomplete="off" spellcheck="false">
       <div class="search-box" id="search-box">
-        <input type="text" id="search-bar" placeholder="Recherche confidentielle..." autocomplete="off" />
+        <input type="text" id="search-bar" placeholder="Recherche confidentielle..." autocomplete="off" inputmode="search" />
         <button type="submit" class="search-icon-btn" aria-label="Rechercher">
           <svg class="search-icon-svg" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8.1" />
@@ -272,7 +276,7 @@
       { title: "Signal", url: "https://signal.org", description: "Messagerie instantanée ultra-sécurisée, open source, appels et messages chiffrés de bout en bout." },
       { title: "Mastodon", url: "https://mastodon.social", description: "Réseau social décentralisé, open source, respectueux de la vie privée." },
       { title: "Quest", url: "https://github.com/arthur-lenoble/quest", description: "Moteur de recherche qui ne vous trace jamais et vous permet de voyager sur internet en sécurité." },
-      { title: "Quest Tracklock Mode", url: "https://github.com/arthur-lenoble/quest-tracklock", description: "Le moteur de recherche local, élégant et ultra confidentiell." },
+      { title: "Quest Tracklock Mode", url: "https://github.com/arthur-lenoble/quest-tracklock", description: "Le moteur de recherche local, élégant et ultra confidentiel." },
       { title: "Opal Assistant", url: "https://arthur-lenoble.github.io/opal", description: "Assistant IA ultrarapide, basse consommation, pour booster créativité et productivité." },
       { title: "MDN Web Docs", url: "https://developer.mozilla.org", description: "Documentation web complète pour HTML, CSS, JavaScript, APIs, ressources pour tous niveaux." },
       { title: "Stack Overflow", url: "https://stackoverflow.com", description: "Plateforme de questions/réponses pour développeurs, entraide sur tous les langages et frameworks." },
@@ -296,9 +300,11 @@
       { title: "Sciences et Avenir", url: "https://sciencesetavenir.fr", description: "Magazine d’actualité scientifique, découvertes, vulgarisation, reportages." },
       { title: "Data.gouv.fr", url: "https://data.gouv.fr", description: "Portail officiel des données publiques françaises, open data, visualisations et API." },
       { title: "Zeste de Savoir", url: "https://zestedesavoir.com", description: "Communauté de partage de connaissances, articles, tutoriels, forums, sciences et tech." },
-      { title: "Apple", url: "https://apple.fr", description: "Apple est une société basée aux États-Unis et plus précisément à Cupertino spécialisée dans les smartphones et les ordinateurs."},
-      { title: "W3 Schools", url: "https://www.w3schools.org", description: "W3 Schools est l'outil parfait pour apprendre à coder, avec ses multiples cours et son éditeur de code intégré."},
-      { title: "Windows for web", url: "https://arthur-lenoble.github.io/Windows-web", description: "Windows Web est l'outil de productivité parfait pour les créateurs de contenu dont le matériel est limité, simulant un OS en ligne."}
+      { title: "Apple", url: "https://apple.fr", description: "Apple est une société basée aux États-Unis spécialisée dans les smartphones, ordinateurs et services grand public." },
+      { title: "W3 Schools", url: "https://www.w3schools.org", description: "W3 Schools est l'outil parfait pour apprendre à coder, avec ses multiples cours et son éditeur de code intégré." },
+      { title: "Windows for web", url: "https://arthur-lenoble.github.io/Windows-web", description: "Windows Web est l'outil de productivité parfait pour les créateurs de contenu dont le matériel est limité." },
+      { title: "IA France", url: "https://ia-france.fr", description: "Le portail de l'intelligence artificielle et de l'innovation numérique en France : veille, ressources, événements." },
+      { title: "Anthropic", url: "https://www.anthropic.com", description: "Entreprise spécialisée en IA, pionnière dans le développement de modèles avancés et de solutions responsables." }
     ];
 
     // Levenshtein pour fuzzy search
@@ -326,6 +332,57 @@
       return text.replace(new RegExp(safe, "gi"), (match) => `<mark>${match}</mark>`);
     }
 
+    // Algorithme de pertinence avancé
+    function getResults(query) {
+      if (!query) return [];
+      const q = query.toLowerCase();
+
+      // Calcul du score de pertinence pour chaque résultat
+      function scoreItem(item) {
+        let score = 0;
+        const t = item.title.toLowerCase();
+        const d = item.description.toLowerCase();
+        const u = item.url.toLowerCase();
+
+        // correspondance exacte (titre)
+        if (t === q) score += 90;
+        // mot-clé au début du titre
+        else if (t.startsWith(q)) score += 70;
+        // mot-clé dans le titre (bonus selon position)
+        else if (t.includes(q)) score += 60 - t.indexOf(q);
+        // mot-clé exact dans description
+        if (d === q) score += 45;
+        // mot-clé au début description
+        else if (d.startsWith(q)) score += 30;
+        // mot-clé dans description
+        else if (d.includes(q)) score += 25 - d.indexOf(q)/6;
+        // mot-clé exact url
+        if (u === q) score += 30;
+        else if (u.startsWith(q)) score += 20;
+        else if (u.includes(q)) score += 10 - u.indexOf(q)/15;
+
+        // Bonus si le mot correspond à une catégorie "IA" connue
+        if (["ia", "intelligence artificielle", "gpt", "openai", "anthropic"].some(w => q.includes(w))) {
+          if (["openai", "anthropic", "opal", "ia"].some(w => t.includes(w) || d.includes(w))) score += 20;
+        }
+        // Fuzzy
+        let lmin = Math.min(levenshtein(t,q), levenshtein(d,q), levenshtein(u,q));
+        score += Math.max(0, 10 - lmin);
+
+        return score;
+      }
+
+      let scored = data.map(item => ({item, score: scoreItem(item)}));
+      scored.sort((a,b) => b.score - a.score);
+
+      // Principal : score > 18
+      let mainResults = scored.filter(r => r.score > 18).map(r=>r.item);
+      // Suggestions fuzzy
+      let similar = scored.filter(r => r.score > 0 && r.score <= 18).slice(0,5).map(r=>r.item);
+
+      return { mainResults, similar };
+    }
+
     const searchBar = document.getElementById("search-bar");
     const searchForm = document.getElementById("search-form");
     const resultsContainer = document.getElementById("results-container");
@@ -343,7 +400,10 @@
     function doSearch(e) {
       if (e) e.preventDefault();
       updateHalo();
-      const query = searchBar.value.trim().toLowerCase();
+      let query = searchBar.value.trim();
+      // On retire les espaces et caractères dangereux
+      query = query.replace(/[<>"]/g,'').slice(0,100);
+
       resultsContainer.innerHTML = "";
 
       if (query.length === 0) {
@@ -351,48 +411,10 @@
         return;
       }
 
-      // Recherche avancée
-      let found = [];
-      let similar = [];
+      const { mainResults, similar } = getResults(query);
 
-      // 1. Titre exact, puis titre partiel
-      found = data.filter(item =>
-        item.title.toLowerCase() === query
-      );
-      if (!found.length) {
-        found = data.filter(item =>
-          item.title.toLowerCase().startsWith(query)
-        );
-      }
-      if (found.length < 5) {
-        let tpartial = data.filter(item =>
-          !found.includes(item) && item.title.toLowerCase().includes(query)
-        );
-        found = found.concat(tpartial);
-      }
-      // 2. Description ou URL partielle
-      if (found.length < 10) {
-        let descMatches = data.filter(item =>
-          !found.includes(item) &&
-          (item.description.toLowerCase().includes(query) ||
-           item.url.toLowerCase().includes(query))
-        );
-        found = found.concat(descMatches);
-      }
-      // 3. Similaires par Levenshtein (titre/desc/url)
-      if (found.length < 1) {
-        let scores = data.map(item => {
-          let tScore = levenshtein(item.title.toLowerCase(), query);
-          let dScore = levenshtein(item.description.toLowerCase(), query);
-          let uScore = levenshtein(item.url.toLowerCase(), query);
-          return { item, score: Math.min(tScore, dScore, uScore) };
-        });
-        scores.sort((a, b) => a.score - b.score);
-        similar = scores.slice(0, 5).map(s => s.item);
-      }
-
-      if (found.length > 0) {
-        found.slice(0, 10).forEach(result => {
+      if (mainResults.length > 0) {
+        mainResults.slice(0, 10).forEach(result => {
           const card = document.createElement("div");
           card.className = "result-card";
           card.innerHTML = `
@@ -401,13 +423,12 @@
           `;
           resultsContainer.appendChild(card);
         });
-        // Suggestions similaires si dispo et pas déjà listés
-        if (found.length < 5 && similar.length && !similar.every(r => found.includes(r))) {
+        if (similar.length) {
           const st = document.createElement("div");
           st.className = "similar-title";
-          st.textContent = "Résultats similaires :";
+          st.textContent = "Résultats proches :";
           resultsContainer.appendChild(st);
-          similar.filter(r => !found.includes(r)).slice(0, 5).forEach(result => {
+          similar.forEach(result => {
             const card = document.createElement("div");
             card.className = "result-card";
             card.innerHTML = `
@@ -420,7 +441,7 @@
       } else if (similar.length) {
         const st = document.createElement("div");
         st.className = "similar-title";
-        st.textContent = "Résultats similaires :";
+        st.textContent = "Résultats proches :";
         resultsContainer.appendChild(st);
         similar.forEach(result => {
           const card = document.createElement("div");
@@ -432,7 +453,7 @@
           resultsContainer.appendChild(card);
         });
       } else {
-        const nothing = document.createElement("div");
+        const nothing = document.createElemnt("div");
         nothing.className = "result-card";
         nothing.innerHTML = `<div class="result-desc">Aucun résultat trouvé.</div>`;
         resultsContainer.appendChild(nothing);
